@@ -1,3 +1,12 @@
+---
+title: Bejaa Optimization Scanner
+emoji: 🔍
+colorFrom: blue
+colorTo: purple
+sdk: docker
+pinned: false
+---
+
 # 🚀 Bejaa Digital Website Optimization Scanner
 
 A professional website optimization scanner tool to build trust with prospects and generate leads for Bejaa Digital.
