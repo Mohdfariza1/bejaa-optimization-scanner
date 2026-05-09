@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bejaa Digital — Website Optimization Scanner</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ── NAV ───────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="nav-logo"><i class="fas fa-chart-line"></i></div>
+      <span>Bejaa<strong>Scanner</strong></span>
+    </div>
+    <div class="nav-links">
+      <a href="https://bejaadigital.com" target="_blank">Home</a>
+      <a href="https://bejaadigital.com/services" target="_blank">Services</a>
+      <a href="https://bejaadigital.com/contact" target="_blank" class="nav-cta">Get Help</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="container">
+    <div class="hero-badge"><i class="fas fa-bolt"></i> Free Professional Analysis</div>
+    <h1 class="hero-title">Is Your Website Losing Clients<br><span class="gradient-text">Without You Knowing?</span></h1>
+    <p class="hero-sub">Scan your website for SEO, speed, security, mobile & accessibility issues — in under 30 seconds.</p>
+
+    <div class="scan-card">
+      <div class="scan-input-wrap">
+        <div class="scan-icon"><i class="fas fa-globe"></i></div>
+        <input type="text" id="websiteUrl" class="scan-input" placeholder="https://yourwebsite.com" autocomplete="off" spellcheck="false" />
+        <button id="scanButton" class="scan-btn">
+          <span class="scan-btn-text"><i class="fas fa-search"></i> Scan Now</span>
+          <span class="scan-btn-loading" style="display:none"><i class="fas fa-spinner fa-spin"></i> Scanning...</span>
+        </button>
+      </div>
+      <div class="scan-hints">
+        <span><i class="fas fa-shield-alt"></i> Secure</span>
+        <span><i class="fas fa-clock"></i> ~30 seconds</span>
+        <span><i class="fas fa-check-circle"></i> No login required</span>
+        <span><i class="fas fa-file-alt"></i> Full report included</span>
+      </div>
+    </div>
+
+    <div class="hero-metrics">
+      <div class="metric"><div class="metric-val">6</div><div class="metric-label">Analysis categories</div></div>
+      <div class="metric-divider"></div>
+      <div class="metric"><div class="metric-val">50+</div><div class="metric-label">Factors checked</div></div>
+      <div class="metric-divider"></div>
+      <div class="metric"><div class="metric-val">100%</div><div class="metric-label">Free, always</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LOADING OVERLAY ───────────────────────────────────── -->
+<div id="loadingOverlay" class="loading-overlay" style="display:none">
+  <div class="loading-card">
+    <div class="loading-ring">
+      <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" class="ring-track"/><circle cx="40" cy="40" r="34" class="ring-fill" id="loadRing"/></svg>
+      <div class="loading-pct" id="loadPct">0%</div>
+    </div>
+    <h3 class="loading-title">Scanning your website</h3>
+    <p class="loading-step" id="loadStep">Initializing...</p>
+    <div class="loading-steps-list" id="loadStepsList">
+      <div class="lstep" data-step="0"><i class="fas fa-circle-notch"></i> Connecting</div>
+      <div class="lstep" data-step="1"><i class="fas fa-circle-notch"></i> SEO Analysis</div>
+      <div class="lstep" data-step="2"><i class="fas fa-circle-notch"></i> Performance</div>
+      <div class="lstep" data-step="3"><i class="fas fa-circle-notch"></i> Security</div>
+      <div class="lstep" data-step="4"><i class="fas fa-circle-notch"></i> Mobile</div>
+      <div class="lstep" data-step="5"><i class="fas fa-circle-notch"></i> Accessibility</div>
+      <div class="lstep" data-step="6"><i class="fas fa-circle-notch"></i> Technical SEO</div>
+      <div class="lstep" data-step="7"><i class="fas fa-circle-notch"></i> UI/UX</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DASHBOARD (results) ──────────────────────────────── -->
+<section id="dashboard" class="dashboard" style="display:none">
+  <div class="container">
+
+    <!-- Dashboard header -->
+    <div class="dash-header">
+      <div>
+        <p class="dash-url" id="dashUrl">—</p>
+        <h2 class="dash-title">Optimization Report</h2>
+        <p class="dash-date" id="dashDate">—</p>
+      </div>
+      <div class="dash-actions">
+        <button id="btnNewScan" class="btn-ghost"><i class="fas fa-redo"></i> New Scan</button>
+        <button id="btnDownload" class="btn-outline"><i class="fas fa-download"></i> Download JSON</button>
+        <button id="btnShare" class="btn-wa"><i class="fab fa-whatsapp"></i> Share</button>
+      </div>
+    </div>
+
+    <!-- TOP ROW: overall score + donut radar -->
+    <div class="top-row">
+
+      <!-- Overall score card -->
+      <div class="card card-score">
+        <div class="score-donut-wrap">
+          <canvas id="overallDonut" width="180" height="180"></canvas>
+          <div class="score-donut-inner">
+            <div class="score-big" id="overallScore">0</div>
+            <div class="score-denom">/100</div>
+          </div>
+        </div>
+        <div class="score-grade" id="scoreGrade">F</div>
+        <div class="score-label" id="scoreLabel">—</div>
+        <div class="score-bars">
+          <div class="sbar" id="sb-seo"><span class="sbar-name">SEO</span><div class="sbar-track"><div class="sbar-fill" id="sfill-seo"></div></div><span class="sbar-val" id="sval-seo">0</span></div>
+          <div class="sbar" id="sb-performance"><span class="sbar-name">Speed</span><div class="sbar-track"><div class="sbar-fill" id="sfill-performance"></div></div><span class="sbar-val" id="sval-performance">0</span></div>
+          <div class="sbar" id="sb-security"><span class="sbar-name">Security</span><div class="sbar-track"><div class="sbar-fill" id="sfill-security"></div></div><span class="sbar-val" id="sval-security">0</span></div>
+          <div class="sbar" id="sb-mobile"><span class="sbar-name">Mobile</span><div class="sbar-track"><div class="sbar-fill" id="sfill-mobile"></div></div><span class="sbar-val" id="sval-mobile">0</span></div>
+          <div class="sbar" id="sb-accessibility"><span class="sbar-name">Access.</span><div class="sbar-track"><div class="sbar-fill" id="sfill-accessibility"></div></div><span class="sbar-val" id="sval-accessibility">0</span></div>
+          <div class="sbar" id="sb-technical_seo"><span class="sbar-name">Tech SEO</span><div class="sbar-track"><div class="sbar-fill" id="sfill-technical_seo"></div></div><span class="sbar-val" id="sval-technical_seo">0</span></div>
+          <div class="sbar" id="sb-uiux"><span class="sbar-name">UI/UX</span><div class="sbar-track"><div class="sbar-fill" id="sfill-uiux"></div></div><span class="sbar-val" id="sval-uiux">0</span></div>
+        </div>
+      </div>
+
+      <!-- Category donuts grid -->
+      <div class="card card-donuts">
+        <h3 class="card-title">Category Breakdown</h3>
+        <div class="donuts-grid" id="donutsGrid">
+          <!-- injected by JS -->
+        </div>
+      </div>
+
+      <!-- Quick stats -->
+      <div class="card card-stats">
+        <h3 class="card-title">Quick Stats</h3>
+        <div class="stats-list" id="statsList">
+          <!-- injected by JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CATEGORY CARDS ROW -->
+    <div class="section-label">Detailed Analysis</div>
+    <div class="cat-grid" id="catGrid">
+      <!-- injected by JS -->
+    </div>
+
+    <!-- PRIORITY FIXES -->
+    <div class="section-label">Priority Fixes <span class="badge-count" id="fixCount">0</span></div>
+    <div class="fixes-list" id="fixesList">
+      <!-- injected by JS -->
+    </div>
+
+    <!-- RECOMMENDATIONS -->
+    <div class="section-label">Actionable Recommendations</div>
+    <div class="rec-filter-tabs">
+      <button class="rec-tab active" data-prio="all">All</button>
+      <button class="rec-tab" data-prio="high">High</button>
+      <button class="rec-tab" data-prio="medium">Medium</button>
+      <button class="rec-tab" data-prio="low">Low</button>
+    </div>
+    <div class="recs-grid" id="recsGrid">
+      <!-- injected by JS -->
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-card">
+      <div class="cta-left">
+        <div class="cta-icon"><i class="fas fa-rocket"></i></div>
+        <div>
+          <h3>Want these issues fixed — fast?</h3>
+          <p>Bejaa Digital implements every recommendation for you. G5/G7 certified. No tech jargon.</p>
+        </div>
+      </div>
+      <div class="cta-right">
+        <a href="https://bejaadigital.com/contact" target="_blank" class="btn-primary">Free Consultation <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FEATURES (pre-scan) ───────────────────────────────── -->
+<section class="features-section" id="featuresSection">
+  <div class="container">
+    <h2 class="section-title">What We Analyze</h2>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon feat-seo"><i class="fas fa-search"></i></div>
+        <h4>SEO</h4>
+        <p>Meta tags, headings, alt text, keywords, link structure</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon feat-perf"><i class="fas fa-bolt"></i></div>
+        <h4>Performance</h4>
+        <p>Load speed, page size, compression, caching, render-blocking</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon feat-sec"><i class="fas fa-shield-alt"></i></div>
+        <h4>Security</h4>
+        <p>SSL certificate, HTTPS, security headers, info leakage</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon feat-mob"><i class="fas fa-mobile-alt"></i></div>
+        <h4>Mobile</h4>
+        <p>Viewport, responsive design, touch targets, image sizing</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon feat-a11y"><i class="fas fa-universal-access"></i></div>
+        <h4>Accessibility</h4>
+        <p>WCAG checks, form labels, landmarks, skip nav, ARIA</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon feat-tech"><i class="fas fa-code"></i></div>
+        <h4>Technical SEO</h4>
+        <p>robots.txt, sitemap, canonical, structured data, Open Graph</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon feat-uiux"><i class="fas fa-paint-brush"></i></div>
+        <h4>UI/UX</h4>
+        <p>CTAs, trust signals, social proof, hero section, navigation clarity, modern design</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo"><i class="fas fa-chart-line"></i></div>
+        <span>Bejaa<strong>Digital</strong></span>
+      </div>
+      <div class="footer-links">
+        <a href="https://bejaadigital.com">bejaadigital.com</a>
+        <a href="mailto:hello@bejaadigital.com">hello@bejaadigital.com</a>
+      </div>
+      <p class="footer-copy">&copy; 2025 Bejaa Digital. Free tool — share it.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/static/js/scanner.js"></script>
+</body>
+</html>
