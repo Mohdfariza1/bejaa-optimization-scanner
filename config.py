@@ -21,9 +21,9 @@ SCANNER_CONFIG = {
     
     # Timeouts (in seconds)
     "timeouts": {
-        "request_timeout": 10,
-        "speedtest_timeout": 30,
-        "ssl_timeout": 5
+        "request_timeout": 20,
+        "speedtest_timeout": 45,
+        "ssl_timeout": 10
     },
     
     # File paths
